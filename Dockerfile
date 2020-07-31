@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y \
     doxygen graphviz \
     yapf3 python3-yapf \
     python python-dev python3 python3-dev \
-    libomp-dev
+    libomp-dev libomp5 autoconf autogen pkg-config libgtk-3-dev
 
 RUN python3.6 -m pip install pip --upgrade && \ 
     pip3 install -U --user pip six 'numpy<1.19.0' wheel setuptools mock 'future>=0.17.1' && \ 
@@ -94,10 +94,10 @@ COPY make_tf_build_verbose.patch $HE_TRANSFORMER/cmake/make_tf_build_verbose.pat
 
 RUN mkdir build && \
     cd build && \ 
-    cmake .. -DCMAKE_CXX_COMPILER=clang++-9 -DCMAKE_C_COMPILER=clang-9
+    cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_COMPILER=clang++-9 -DCMAKE_C_COMPILER=clang-9 -Werror
 WORKDIR $HE_TRANSFORMER/build
-RUN env VERBOSE=1 make -j144 install
-RUN source external/venv-tf-py3/bin/activate
+RUN make VERBOSE=1 -j 144 install || echo "make returned non-zero error code"
+#RUN source external/venv-tf-py3/bin/activate
 
 #RUN env VERBOSE=1 make -j144 install; source external/venv-tf-py3/bin/activate
 

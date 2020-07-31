@@ -41,7 +41,7 @@ RUN apt-get update && apt-get install -y \
     libomp-dev
 
 RUN python3.6 -m pip install pip --upgrade && \ 
-    pip3 install -U --user pip six 'numpy==1.16.4' wheel setuptools mock 'future>=0.17.1' && \ 
+    pip3 install -U --user pip six 'numpy<1.19.0' wheel setuptools mock 'future>=0.17.1' && \ 
     pip3 install -U --user keras_applications --no-deps && \ 
     pip3 install -U --user keras_preprocessing --no-deps && \ 
     rm -rf /usr/bin/python && \
@@ -85,6 +85,8 @@ RUN git clone https://github.com/IntelAI/he-transformer.git
 
 WORKDIR $HE_TRANSFORMER
 COPY ngraph-tf.cmake $HE_TRANSFORMER/cmake/ngraph-tf.cmake
+COPY fix_numpy_for_tf.patch $HE_TRANSFORMER/cmake/fix_numpy_for_tf.patch
+COPY make_tf_build_verbose.patch $HE_TRANSFORMER/cmake/make_tf_build_verbose.patch
 
 RUN mkdir build && \
     cd build && \ 

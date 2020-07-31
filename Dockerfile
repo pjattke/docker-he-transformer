@@ -32,7 +32,7 @@ RUN apt-get update && apt-get install -y \
     bash-completion \
     build-essential cmake \
     software-properties-common \
-    git \
+    git openssl libssl-dev \
     wget patch diffutils libtinfo-dev \
     autoconf libtool \
     doxygen graphviz \
@@ -62,10 +62,15 @@ RUN apt-get clean autoclean && apt-get autoremove -y
 RUN pip3 install --upgrade pip setuptools virtualenv==16.1.0
 
 # SEAL requires newer version of CMake
-RUN wget https://cmake.org/files/v3.15/cmake-3.15.0.tar.gz
-RUN tar -xvzf cmake-3.15.0.tar.gz
-WORKDIR cmake-3.15.0
-RUN export CC=clang-9; export CXX=clang++-9; ./bootstrap; make -j144; make install
+# see https://stackoverflow.com/questions/29816529/unsupported-protocol-while-download-tar-gz-package
+RUN wget https://cmake.org/files/v3.15/cmake-3.15.0.tar.gz && \
+    tar -xvzf cmake-3.15.0.tar.gz && \
+    cd cmake-3.15.0 && \
+    export CC=clang-9 && \ 
+    export CXX=clang++-9 && \
+    echo "SET(CMAKE_USE_OPENSSL CACHE BOOL ON FORCE)" > CMAKE_USE_SSL_ON.cmake && ./bootstrap --init=CMAKE_USE_SSL_ON.cmake && \
+    make -j144 && \
+    make install
 
 # Get bazel for ng-tf
 RUN wget https://github.com/bazelbuild/bazel/releases/download/0.25.2/bazel-0.25.2-installer-linux-x86_64.sh

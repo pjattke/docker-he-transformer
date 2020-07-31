@@ -1,0 +1,9 @@
+.bash_history
+.bash_logout
+.bashrc
+.cache/motd.legal-displayed
+.profile
+.ssh/*
+.sudo_as_admin_successful
+.viminfo
+

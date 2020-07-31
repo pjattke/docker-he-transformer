@@ -1,0 +1,12 @@
+diff --git a/tools/build_utils.py b/tools/build_utils.py
+index 8aab3a43..20d79211 100755
+--- a/tools/build_utils.py
++++ b/tools/build_utils.py
+@@ -217,6 +217,7 @@ def build_tensorflow(venv_dir, src_dir, artifacts_dir, target_arch, verbosity):
+     cmd = [
+         "bazel",
+         "build",
++        "--verbose_failures",
+         "--config=opt",
+         "--config=noaws",
+         "--config=nohdfs",

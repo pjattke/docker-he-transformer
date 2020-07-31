@@ -32,7 +32,7 @@ RUN apt-get update && apt-get install -y \
     bash-completion \
     build-essential cmake \
     software-properties-common \
-    git openssl libssl-dev \
+    git openssl libssl-dev libcurl4-openssl-dev \
     wget patch diffutils libtinfo-dev \
     autoconf libtool \
     doxygen graphviz \
@@ -62,13 +62,12 @@ RUN apt-get clean autoclean && apt-get autoremove -y
 RUN pip3 install --upgrade pip setuptools virtualenv==16.1.0
 
 # SEAL requires newer version of CMake
-# see https://stackoverflow.com/questions/29816529/unsupported-protocol-while-download-tar-gz-package
 RUN wget https://cmake.org/files/v3.15/cmake-3.15.0.tar.gz && \
     tar -xvzf cmake-3.15.0.tar.gz && \
     cd cmake-3.15.0 && \
     export CC=clang-9 && \ 
     export CXX=clang++-9 && \
-    echo "SET(CMAKE_USE_OPENSSL CACHE BOOL ON FORCE)" > CMAKE_USE_SSL_ON.cmake && ./bootstrap --init=CMAKE_USE_SSL_ON.cmake && \
+    ./bootstrap --system-curl
     make -j144 && \
     make install
 

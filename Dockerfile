@@ -27,7 +27,7 @@ FROM ubuntu:18.04
 RUN apt-get update && apt-get install -y \
     python3-pip virtualenv python3-dev \
     git \
-    unzip wget \
+    unzip wget curl \
     sudo \
     bash-completion \
     build-essential cmake \

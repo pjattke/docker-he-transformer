@@ -67,7 +67,7 @@ RUN wget https://cmake.org/files/v3.15/cmake-3.15.0.tar.gz && \
     cd cmake-3.15.0 && \
     export CC=clang-9 && \ 
     export CXX=clang++-9 && \
-    ./bootstrap --system-curl
+    ./bootstrap --system-curl && \
     make -j144 && \
     make install
 

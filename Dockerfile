@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     git openssl libssl-dev libcurl4-openssl-dev \
     wget patch diffutils libtinfo-dev \
-    autoconf libtool \
+    autoconf libtool zlib1g zlib1g-dev \
     doxygen graphviz \
     yapf3 python3-yapf \
     python python-dev python3 python3-dev \

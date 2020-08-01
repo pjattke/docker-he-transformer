@@ -68,7 +68,7 @@ RUN wget https://cmake.org/files/v3.15/cmake-3.15.0.tar.gz && \
     export CC=clang-9 && \ 
     export CXX=clang++-9 && \
     ./bootstrap --system-curl && \
-    make -j144 && \
+    make -j$(nproc) && \
     make install
 
 # Get bazel for ng-tf
@@ -97,7 +97,7 @@ RUN mkdir build && \
     cd build && \ 
     cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_COMPILER=clang++-9 -DCMAKE_C_COMPILER=clang-9 -Werror
 WORKDIR $HE_TRANSFORMER/build
-RUN make VERBOSE=1 -j 144 install || echo "make returned non-zero error code"
+RUN make VERBOSE=1 -j$(nproc) install || echo "make returned non-zero error code"
 #RUN source external/venv-tf-py3/bin/activate
 
 #RUN env VERBOSE=1 make -j144 install; source external/venv-tf-py3/bin/activate

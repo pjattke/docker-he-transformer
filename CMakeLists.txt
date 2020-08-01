@@ -101,7 +101,14 @@ configure_file(.clang-tidy ${CMAKE_CURRENT_BINARY_DIR}/.clang-tidy COPYONLY)
 
 message(STATUS "Adding unit test for backend ${BACKEND_NAME}")
 
+
+# Clang passing flags to the linker (likely ld) AND using -v itself to show how it calls the linker
+set(CMAKE_EXE_LINKER_FLAGS "-Xlinker -v -v")
+
 add_executable(unit-test ${SRC})
+
+# Verbose compilation steps
+target_compile_options(unit-test PRIVATE -v)
 
 target_include_directories(unit-test PRIVATE ".")
 

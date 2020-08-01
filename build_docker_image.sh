@@ -1,11 +1,11 @@
 #!/bin/bash
 
-set -e
-set -o pipefail
+#set -e
+#set -o pipefail
 
 # add user to docker group
-sudo usermod -aG docker $USER
-newgrp docker
+#sudo usermod -aG docker $USER
+#newgrp docker
 
 # build image
 TS=`date +%s`

@@ -112,10 +112,19 @@ target_compile_options(unit-test PRIVATE -v)
 
 target_include_directories(unit-test PRIVATE ".")
 
-target_link_libraries(unit-test PRIVATE libngraph libngraph_test_util)
-target_link_libraries(unit-test PRIVATE libgtest pthread)
-target_link_libraries(unit-test PRIVATE he_seal_backend libseal)
-target_link_libraries(unit-test PRIVATE protobuf::libprotobuf)
+target_link_libraries(unit-test PUBLIC
+                he_seal_backend
+                libabseil
+                libboost
+                libgtest 
+                libjson
+                libngraph
+                libngraph_test_util
+                libseal
+                protobuf::libprotobuf
+                pthread
+                zlib)
+
 
 if (NGRAPH_HE_ABY_ENABLE)
   target_link_libraries(unit-test PRIVATE libaby)

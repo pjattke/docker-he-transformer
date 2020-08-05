@@ -52,10 +52,6 @@ RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 RUN apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main"
 RUN apt-get update && apt install -y clang-9 clang-tidy-9 clang-format-9
 
-RUN apt-get update && apt-get install -y gcc-4.8 g++-4.8
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8 && \
-  update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7
-
 RUN apt-get clean autoclean && apt-get autoremove -y
 
 # For ngraph-tf integration testing
@@ -98,17 +94,14 @@ RUN mkdir build && \
     cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_COMPILER=clang++-9 -DCMAKE_C_COMPILER=clang-9 -Werror
 WORKDIR $HE_TRANSFORMER/build
 RUN make VERBOSE=1 -j$(nproc) install || echo "make returned non-zero error code"
-#RUN source external/venv-tf-py3/bin/activate
-
-#RUN env VERBOSE=1 make -j144 install; source external/venv-tf-py3/bin/activate
 
 # Build the Python bindings for client
 # https://github.com/IntelAI/he-transformer#1c-python-bindings-for-client
-#RUN cd $HE_TRANSFORMER/build && \
-#    source external/venv-tf-py3/bin/activate && \
-#    make install python_client && \
-#    pip install python/dist/pyhe_client-*.whl && \
-#    python3 -c "import pyhe_client"
+RUN cd $HE_TRANSFORMER/build && \
+    source external/venv-tf-py3/bin/activate && \
+    make install python_client && \
+    pip install python/dist/pyhe_client-*.whl && \
+    python3 -c "import pyhe_client"
 
 CMD ["/bin/bash"]
 

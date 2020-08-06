@@ -48,9 +48,9 @@ RUN python3.6 -m pip install pip --upgrade && \
     ln -s /usr/bin/python3.6 /usr/bin/python
 
 # Install clang-9
-RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-RUN apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main"
-RUN apt-get update && apt install -y clang-9 clang-tidy-9 clang-format-9
+RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - && \
+    apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main" && \
+    apt-get update && apt install -y clang-9 clang-tidy-9 clang-format-9
 
 RUN apt-get clean autoclean && apt-get autoremove -y
 
@@ -68,9 +68,9 @@ RUN wget https://cmake.org/files/v3.15/cmake-3.15.0.tar.gz && \
     make install
 
 # Get bazel for ng-tf
-RUN wget https://github.com/bazelbuild/bazel/releases/download/0.25.2/bazel-0.25.2-installer-linux-x86_64.sh
-RUN chmod +x ./bazel-0.25.2-installer-linux-x86_64.sh
-RUN bash ./bazel-0.25.2-installer-linux-x86_64.sh
+RUN wget https://github.com/bazelbuild/bazel/releases/download/0.25.2/bazel-0.25.2-installer-linux-x86_64.sh && \
+    chmod +x ./bazel-0.25.2-installer-linux-x86_64.sh && \
+    bash ./bazel-0.25.2-installer-linux-x86_64.sh
 WORKDIR /home
 
 
@@ -91,19 +91,22 @@ COPY CMakeLists.txt $HE_TRANSFORMER/test/CMakeLists.txt
 
 RUN mkdir build && \
     cd build && \ 
-    cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_COMPILER=clang++-9 -DCMAKE_C_COMPILER=clang-9 -Werror
-WORKDIR $HE_TRANSFORMER/build
-RUN make VERBOSE=1 -j$(nproc) install || echo "make returned non-zero error code"
+    cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_COMPILER=clang++-9 -DCMAKE_C_COMPILER=clang-9 -Werror && \
+    make -j$(nproc) install && \
+    rm -rf ~/.cache/bazel/
 
 # Build the Python bindings for client
 # https://github.com/IntelAI/he-transformer#1c-python-bindings-for-client
 RUN cd $HE_TRANSFORMER/build && \
-    source external/venv-tf-py3/bin/activate && \
+    . external/venv-tf-py3/bin/activate && \
     make install python_client && \
-    pip install python/dist/pyhe_client-*.whl && \
-    python3 -c "import pyhe_client"
+    pip install python/dist/pyhe_client-*.whl
 
-CMD ["/bin/bash"]
+WORKDIR $HE_TRANSFORMER/build
 
+ENV VIRTUAL_ENV=$HE_TRANSFORMER/build/external/venv-tf-py
+RUN python3.6 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
+CMD [ "/bin/bash" ]
 

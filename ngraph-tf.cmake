@@ -49,7 +49,6 @@ ExternalProject_Add(ext_ngraph_tf
       BUILD_IN_SOURCE 1
       BUILD_BYPRODUCTS ${NGRAPH_TF_CMAKE_PREFIX}
       PATCH_COMMAND git apply ${NGRAPH_TF_PATCH}
-      COMMAND git apply ${CMAKE_CURRENT_SOURCE_DIR}/cmake/make_tf_build_verbose.patch
       COMMAND git apply ${CMAKE_CURRENT_SOURCE_DIR}/cmake/fix_numpy_for_tf.patch
       BUILD_COMMAND python3 ${NGRAPH_TF_SRC_DIR}/build_ngtf.py --use_grappler_optimizer --ngraph_src_dir ${NGRAPH_SRC_DIR}
       INSTALL_COMMAND ln -fs ${NGRAPH_TF_VENV_DIR}

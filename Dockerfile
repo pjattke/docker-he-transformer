@@ -86,7 +86,6 @@ RUN git clone https://github.com/IntelAI/he-transformer.git
 WORKDIR $HE_TRANSFORMER
 COPY ngraph-tf.cmake $HE_TRANSFORMER/cmake/ngraph-tf.cmake
 COPY fix_numpy_for_tf.patch $HE_TRANSFORMER/cmake/fix_numpy_for_tf.patch
-COPY make_tf_build_verbose.patch $HE_TRANSFORMER/cmake/make_tf_build_verbose.patch
 COPY CMakeLists.txt $HE_TRANSFORMER/test/CMakeLists.txt
 
 RUN mkdir build && \
@@ -103,10 +102,6 @@ RUN cd $HE_TRANSFORMER/build && \
     pip install python/dist/pyhe_client-*.whl
 
 WORKDIR $HE_TRANSFORMER/build
-
-ENV VIRTUAL_ENV=$HE_TRANSFORMER/build/external/venv-tf-py
-RUN python3.6 -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 CMD [ "/bin/bash" ]
 
